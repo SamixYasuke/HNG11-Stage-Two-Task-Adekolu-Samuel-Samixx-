@@ -101,8 +101,18 @@ const registerController = async (req, res) => {
   }
 };
 
+
 const loginController = async (req, res) => {
   const { email, password } = req.body;
+
+  // Check if email or password is missing
+  if (!email || !password) {
+    return res.status(401).json({
+      status: "Bad Request",
+      message: "Authentication failed ",
+      statusCode: 401
+    });
+  }
 
   try {
     // Check if user with provided email exists
