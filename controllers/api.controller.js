@@ -183,6 +183,7 @@ const getOrganisationByIdController = async (req, res) => {
   }
 };
 
+
 const createOrganisationController = async (req, res) => {
   const { name, description } = req.body;
   const authenticatedUserId = req.userId;
@@ -198,14 +199,12 @@ const createOrganisationController = async (req, res) => {
     if (!name) {
       return res.status(400).json({
         error: "Bad Request",
-        message: "Name is required",
+        message: "Client Error",
         statusCode: 400,
       });
     }
 
-    const authenticatedUserDetails = await db.User.findByPk(
-      authenticatedUserId
-    );
+    const authenticatedUserDetails = await db.User.findByPk(authenticatedUserId);
 
     const orgData = { name, description };
     const newOrg = await db.Organisation.create(orgData);
@@ -218,10 +217,13 @@ const createOrganisationController = async (req, res) => {
     await db.UserOrganisation.create(userOrgData);
 
     res.status(201).json({
-      name,
-      description,
-      authenticatedUserId,
-      newOrg,
+      status: "success",
+      message: "Organisation created successfully",
+      data: {
+        orgId: newOrg.orgId,
+        name: newOrg.name,
+        description: newOrg.description,
+      },
     });
   } catch (error) {
     console.error("Error creating organisation:", error);
@@ -231,6 +233,7 @@ const createOrganisationController = async (req, res) => {
     });
   }
 };
+
 
 const addUserToOrganisation = async (req, res) => {
   const { orgId } = req.params;
@@ -254,7 +257,7 @@ const addUserToOrganisation = async (req, res) => {
     if (!userId) {
       return res.status(400).json({
         error: "Bad Request",
-        message: "User Id is required",
+        message: "Client error",
         statusCode: 400,
       });
     }
@@ -318,7 +321,7 @@ const addUserToOrganisation = async (req, res) => {
       orgId: organisation.orgId,
     });
 
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
       message: "User added to organisation successfully",
     });
