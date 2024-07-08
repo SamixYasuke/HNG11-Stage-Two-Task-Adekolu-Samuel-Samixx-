@@ -3,7 +3,6 @@ import Organisation from "./Organisation.model.js";
 import UserOrganisation from "./UserOrganisation.model.js";
 import { sequelizePostgres } from "../configs/database.config.js";
 
-// Set up associations
 User.belongsToMany(Organisation, {
   through: UserOrganisation,
   foreignKey: "userId",
