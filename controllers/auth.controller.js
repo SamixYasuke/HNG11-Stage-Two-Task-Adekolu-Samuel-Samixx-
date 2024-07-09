@@ -132,9 +132,10 @@ const loginController = async (req, res) => {
     );
 
     if (!passwordIsCorrect) {
-      return res.status(400).json({
-        status: "error",
-        message: "Invalid password",
+      return res.status(401).json({
+        status: "Bad request",
+        message: "Authentication Failed",
+        statusCode: 401
       });
     }
 
